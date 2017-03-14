@@ -151,29 +151,29 @@
 
 +-+-+
 
-[PUB] journal-20170218-2.tex (@logexist)
+[PUB] logexist-20170218-2.tex (@logexist)
 
   the dynamical system of consciousness
 
-[PUB] journal-20170219-0.tex (@logexist)
+[PUB] logexist-20170219-0.tex (@logexist)
 
   consciousness, framed
 
-[PUB] journal-20170218-0.tex (@logexist)
+[PUB] logexist-20170218-0.tex (@logexist)
 
   intro to th spiritual state of being
 
-[PUB] journal-20170217-0.tex (@syntelos)
+[PUB] syntelos-20170217-0.tex (@syntelos)
 
   language, existentially
 
-[PUB] journal-20170216-0.tex (@syntelos)
+[PUB] syntelos-20170216-0.tex (@syntelos)
 
   belief
 
 +-+-+
 
-[PUB]  journal-20170226-0.tex (@syntelos)
+[PUB]  syntelos-20170226-0.tex (@syntelos)
 
   Across the history of language we have developed our arts of
   communication to lead the reader to the comprehension of thought.
