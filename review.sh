@@ -4,12 +4,23 @@ function usage {
   cat<<EOF
 Synopsis
 
-  $0 [0-9]* 
+  $0 -d [0-9]* 
 
 Description
 
   Review a number of documents producing a temp file of query
-  responses.  The argument is a date pattern, e.g. "201701".
+  responses.  The argument is a date pattern, e.g. "201701" or 
+  prefix.
+
+
+Synopsis
+
+  $0 [0-9]* 
+
+Description
+
+  Review a number of documents following a date pattern, e.g. "201701"
+  or prefix.
 
 EOF
   exit 1
@@ -19,45 +30,60 @@ EOF
 
 log=/tmp/review.$$
 
+r_del=false
+
 re=2017
-case "${1}" in
-[0-9]*)
-  re="${1}"
-  ;;
-[a-z-]*)
-  re="${1}"
-  ;;
-*)
-  usage
-  ;;
-esac
 
+#
+while [ -n "${1}" ]
+do
+    case "${1}" in
+	[0-9]*)
+	    re="${1}"
+	    ;;
+	[a-z-]*)
+	    re="${1}"
+	    ;;
+	-d)
+	    r_del=true
+	    ;;
+	*)
+	    usage
+	    ;;
+    esac
+    shift
+done
 
-if flist=$(2>/dev/null ls *${re}*.tex ) && [ -n "${flist}" ]
+#
+if flist=$(2>/dev/null ls *${re}*.txt | sort -V ) && [ -n "${flist}" ]
 then
  for src in ${flist}
  do
    less ${src}
-   read -p "delete? [yN] " -n 1 r_del
-   case "${r_del}" in
-   [yY])
-     echo "D ${src}" >> ${log}
-     echo # (read -n 1)
-     ;;
-   [nN])
-     echo "X ${src}" >> ${log}
-     echo # (read -n 1)
-     ;;
-   *)
-     echo "X ${src}" >> ${log}
-     ;;
-   esac
+
+   if ${r_del}
+   then
+       read -p "delete? [yN] " -n 1 r_del
+       case "${r_del}" in
+	   [yY])
+	       echo "D ${src}" >> ${log}
+	       echo # (read -n 1)
+	       ;;
+	   [nN])
+	       echo "X ${src}" >> ${log}
+	       echo # (read -n 1)
+	       ;;
+	   *)
+	       echo "X ${src}" >> ${log}
+	       ;;
+       esac
+   fi
 
  done
  exit 0
 else
  cat<<EOF>&2
-$0 error, empty list of files from 'ls *${re}*.tex'.
+$0 error, empty list of files from 'ls *${re}*.txt'.
 EOF
  exit 1
 fi
