@@ -1,5 +1,7 @@
 #!/bin/bash
 
+fext=tex
+
 function usage {
   cat<<EOF
 Synopsis
@@ -55,7 +57,7 @@ do
 done
 
 #
-if flist=$(2>/dev/null ls *${re}*.txt | sort -V ) && [ -n "${flist}" ]
+if flist=$(2>/dev/null ls *${re}*.${fext} | sort -V ) && [ -n "${flist}" ]
 then
  for src in ${flist}
  do
@@ -83,7 +85,7 @@ then
  exit 0
 else
  cat<<EOF>&2
-$0 error, empty list of files from 'ls *${re}*.txt'.
+$0 error, empty list of files from 'ls *${re}*.${fext}'.
 EOF
  exit 1
 fi
