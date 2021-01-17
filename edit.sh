@@ -1,40 +1,25 @@
 #!/bin/bash
 
-file_pdf=$(./file.sh $* pdf )
-
-file_png=$(./file.sh $* png )
+wd=$(dirname $0)
 
 
-
-if [ -f "${file_pdf}" ]
+if file_png=$(${wd}/current.sh png $* ) &&[ -n "${file_png}" ]&&[ -f "${file_png}" ]
 then
-    evince ${file_pdf}  
 
-    if [ "${file_png}" ]
-    then
-	gimp ${file_png}  &
-    else
-	cat<<EOF>&2
-$0: file "${file_png}" not found.
-EOF
-	exit 1
-    fi
+    gimp ${file_png}  &
 
+    exit 0
+
+elif file_tex=$(${wd}/current.sh tex $* ) &&[ -n "${file_tex}" ]&&[ -f "${file_tex}" ]
+then
+
+    emacs ${file_tex}  &
+
+    exit 0
 else
     cat<<EOF>&2
-$0: file "${file_pdf}" not found.
+$0: file not found.
 EOF
-
-    if [ -f "${file_png}" ]
-    then
-	gimp ${file_png}  &
-    else
-	cat<<EOF>&2
-$0: file "${file_png}" not found.
-EOF
-	exit 1
-    fi
-
+    exit 1
 fi
 
-exit 0

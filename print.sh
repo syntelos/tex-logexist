@@ -1,17 +1,11 @@
 #!/bin/bash
 
+wd=$(dirname $0)
+
 gen_ps=false
 gen_pdf=false
 gen_png=true
 
-src=$(./file.sh $* tex )
-
-name=$(basename ${src} .tex)
-
-tgt_png=${name}.png
-tgt_pdf=${name}.pdf
-tgt_ps=${name}.ps
-tgt_dvi=${name}.dvi
 
 #
 function usage {
@@ -20,12 +14,14 @@ function usage {
   
 Synopsis
 
-  ${0} (optional file.sh args)
+  ${0} [[+-]{ps,pdf,png}] (optional current.sh args)
 
 Description
 
   Overwrite the last or optionally referenced target.  Reports 'U' for
   write, and 'X' for error.
+
+  Optionally generate ps or ps and pdf instead of the default png.
 
 EOF
 
@@ -45,7 +41,7 @@ EOF
     fi
 
     #
-    if [ -n "$(egrep '^\\input preamble' ${src} )" ]
+    if [ -n "$(egrep '^\\input ' ${src} )" ]
     then
 
 	compiler='tex'
@@ -108,6 +104,62 @@ EOF
 	return 1
     fi
 }
+
+#
+while [ -n "${1}" ]
+do
+    arg="${1}"
+    case "${arg}" in
+	+ps)
+	    gen_ps=true
+	    gen_pdf=false
+	    gen_png=false
+	    shift
+	    ;;
+	+pdf)
+	    gen_ps=true
+	    gen_pdf=true
+	    gen_png=false
+	    shift
+	    ;;
+	+png)
+	    gen_png=true
+	    shift
+	    ;;
+	-ps)
+	    gen_ps=false
+	    gen_pdf=false
+	    gen_png=true
+	    shift
+	    ;;
+	-pdf)
+	    gen_pdf=false
+	    shift
+	    ;;
+	-png)
+	    gen_png=false
+	    shift
+	    ;;
+	-h|-\?|--help)
+	    usage
+	    exit 1
+	    ;;
+	*)
+	    break
+	    ;;
+    esac
+
+done
+
+#
+src=$(${wd}/current.sh tex $* )
+
+name=$(basename ${src} .tex)
+
+tgt_png=${name}.png
+tgt_pdf=${name}.pdf
+tgt_ps=${name}.ps
+tgt_dvi=${name}.dvi
 
 #
 if compile
